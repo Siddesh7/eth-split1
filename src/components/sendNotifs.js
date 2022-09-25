@@ -20,7 +20,7 @@ const sendNotification = async (t_amount, t_sender, receivers) => {
       identityType: 2, // direct payload
       notification: {
         title: `New Payment Request from ${t_sender}`,
-        body: `Payment for ${t_amount}`,
+        body: `Payment for ${t_amount / 1000000000000000000}`,
       },
       payload: {
         title: `New Payment Request from ${t_sender}`,

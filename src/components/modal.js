@@ -17,8 +17,10 @@ export default function MyModal(props) {
     data[index][event.target.address] = event.target.value;
     setInputFields(data);
   };
-  const onSubmit = (data) =>
+  const onSubmit = (data) => {
+    console.log(data);
     sendNotification(props.t_amount, props.t_sender, data);
+  };
   const addFields = () => {
     let newfield = { address: "" };
 
@@ -40,7 +42,7 @@ export default function MyModal(props) {
           onClick={openModal}
           className="rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
         >
-          Open dialog
+          View
         </button>
       </div>
 
@@ -71,25 +73,53 @@ export default function MyModal(props) {
               >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <div className="mt-2">
+                    <h1 className="font-bold text-black">
+                      Transaction Details
+                    </h1>
                     <p className="text-sm text-gray-500 truncate">
                       {props.t_id}
                     </p>
-                    <div className="flex flex-row align-center">
+                    <div className="flex justify-between flex-row align-center">
                       <div>
                         <input type="checkbox" id="checkbox" />
                         <label htmlFor="checkbox">Split equally?</label>
                       </div>
-                      <AiOutlinePlusCircle onClick={addFields} />
+                      <div className="flex items-center">
+                        <AiOutlinePlusCircle
+                          onClick={addFields}
+                          size="1.2rem"
+                        />
+                        <p className="text-[16px]" onClick={addFields}>
+                          Add Field?
+                        </p>
+                      </div>
                     </div>
                   </div>
 
                   <div className="mt-4">
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <form
+                      action="http://127.0.0.1:9090/api"
+                      method="POST"
+                      onSubmit={handleSubmit(onSubmit)}
+                    >
+                      <input
+                        type="number"
+                        name="addressCount"
+                        value={inputFields.length}
+                        hidden
+                      />
+                      <input
+                        type="number"
+                        name="amount"
+                        value={props.t_amount}
+                        hidden
+                      />
                       {inputFields.map((input, index) => {
                         return (
                           <div key={index}>
                             <input
-                              name="address"
+                              className="w-[100%] outline-none my-[4px]"
+                              name={`address${index}`}
                               placeholder="Address/ens"
                               onChange={(event) =>
                                 handleFormChange(index, event)
@@ -101,10 +131,10 @@ export default function MyModal(props) {
                       })}
                       <button
                         type="submit"
-                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 my-[15px]"
                         onClick={closeModal}
                       >
-                        Got it, thanks!
+                        Submit
                       </button>
                     </form>
                   </div>
